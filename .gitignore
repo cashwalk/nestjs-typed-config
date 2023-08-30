@@ -1,0 +1,27 @@
+node_modules
+yarn-error.log
+.idea
+
+npm-debug.log
+coverage
+*.swp
+*.swo
+
+.tmp
+.DS_Store
+.eslintcache
+
+out
+generated
+
+**/*.env
+
+/lib
+/dist
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+/seo_sitemaps
