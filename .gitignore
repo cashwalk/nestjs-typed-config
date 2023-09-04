@@ -25,3 +25,5 @@ generated
 !.elasticbeanstalk/*.global.yml
 
 /seo_sitemaps
+
+nestjs-typed-config.iml
