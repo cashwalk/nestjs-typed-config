@@ -3,11 +3,13 @@
   "version": "0.0.1",
   "description": "type-safe nestjs config module & service",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@nestjs/config": "^3.0.0"
+    "@nestjs/config": "^3.0.0",
+    "joi": "^17.10.0"
   },
   "devDependencies": {
     "@types/node": "18.15.11",
@@ -25,7 +27,6 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-standard": "^5.0.0",
-    "joi": "^17.10.0",
     "prettier": "^2.3.2",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.2.0",
