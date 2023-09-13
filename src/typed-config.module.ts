@@ -1,6 +1,7 @@
 import { ConfigModule, ConfigModuleOptions } from '@nestjs/config';
 import { BaseTypedConfigService } from './base-typed-config.service';
-import { FactoryProvider } from '@nestjs/common';
+
+const TYPED_CONFIG_SERVICE_INJECT_TOKEN = Symbol('TYPED_CONFIG_SERVICE');
 
 export class TypedConfigModule {
   static forRoot(
@@ -8,9 +9,19 @@ export class TypedConfigModule {
     options: ConfigModuleOptions,
   ) {
     const configModule = ConfigModule.forRoot(options);
-    const [originalProvider] = configModule.providers as [FactoryProvider];
-    originalProvider.provide = configService;
-    configModule.exports![0] = configService;
+    configModule.providers?.push({
+      provide: TYPED_CONFIG_SERVICE_INJECT_TOKEN,
+      useClass: configService,
+    });
+    configModule.providers?.push({
+      provide: configService,
+      useFactory: (typedConfigService: BaseTypedConfigService<any>) => {
+        (typedConfigService as any).isCacheEnabled = !!options.cache;
+        return typedConfigService;
+      },
+      inject: [TYPED_CONFIG_SERVICE_INJECT_TOKEN],
+    });
+    configModule.exports?.push(configService);
     return configModule;
   }
 }
