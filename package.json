@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-typed-config",
+  "name": "nestjs-typed-config-module",
   "version": "0.0.1",
   "description": "type-safe nestjs config module & service",
   "main": "dist/index.js",
