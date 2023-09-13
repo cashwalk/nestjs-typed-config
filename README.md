@@ -2,9 +2,11 @@
 
 `nestjs-typed-config-module` is type-safe nestjs config module & service.
 You can use ConfigService with type-safety, without additional type-casting.
-What you need is just define your joi schema with typing, and pass it through module and service.
-You can use all options in ConfigModule.forRoot, and also you can use all methods in ConfigService.
-This will make you can migrate your ConfigModule to TypedConfigModule more easily.
+
+What you need to do is just define your joi schema with typing, and pass it through module and service.
+
+You can use all options in ConfigModule.forRoot, and you can also use all features in ConfigService.
+This will make your migration from ConfigModule to TypedConfigModule easier.
 
 ## example
 
