@@ -12,26 +12,26 @@ ConfigModule.forRoot의 모든 옵션을 사용 가능하며, ConfigService의 �
 
 ## example
 
-You should set up typed config module&service like below.
+다음과 같이 typed config module&service를 설정합니다.
 ```typescript
 import { Module } from '@nestjs/common';
 import { BaseTypedConfigService, TypedConfigModule } from 'nestjs-typed-config-module';
 import Joi from 'joi';
 
-// this is your env object
+// env object를 정의합니다.
 const envObject = {
   NODE_ENV: Joi.string(),
   PORT: Joi.number(),
 };
 
-// write like below to make BaseTypedConfigService infer type.
-// Joi.object(envObject) will not infered well.
+// 아래와 같이 써줘야 타입 추론이 가능합니다.
+// Joi.object(envObject) 로 쓰면 안됩니다.
 export const envSchema = Joi.object<typeof envObject>(envObject);
 
-// give envSchema to BaseTypedConfigService
+// envSchema를 BaseTypedConfigService에 넣어줍니다.
 export class TypedConfigService extends BaseTypedConfigService<typeof envSchema> {}
 
-// use TypedConfigModule.forRoot instead of ConfigModule.forRoot when you initialize your app
+// ConfigModule.forRoot 대신에 TypedConfigModule.forRoot를 써서 initialize 합니다
 @Module({
   imports: [
     TypedConfigModule.forRoot(TypedConfigService, {
@@ -43,17 +43,17 @@ export class TypedConfigService extends BaseTypedConfigService<typeof envSchema>
 export class AppModule {}
 ```
 
-Then you can use TypedConfigService like below.
+TypedConfigService 사용은 아래와 같이 합니다.
 ```typescript
 @Injectable()
 export class AppService {
-  constructor(private readonly configService: TypedConfigService) {} // use TypedConfigService instead of ConfigService
+  constructor(private readonly configService: TypedConfigService) {} // ConfigService 대신에 TypedConfigService를 씁니다 
 
   foo() {
-    const nodeEnv = configService.get('NODE_ENV'); // typed config service will infer type as string, and return value also will be string
-    const port = configService.get('PORT'); // typed config service will infer type as number, and return value also will be number
-    const host = configService.get('HOST'); // compile error, since HOST is not in schema
-    const port2: boolean = configService.get('PORT'); // compile error, since number is not assignable to type boolean
+    const nodeEnv = configService.get('NODE_ENV'); // string으로 타입을 추론해주며, 실제로 string을 리턴합니다.
+    const port = configService.get('PORT'); // number으로 타입을 추론해주며, 실제로 number을 리턴합니다.
+    const host = configService.get('HOST'); // HOST가 스키마에 없기에, compile error가 발생합니다.
+    const port2: boolean = configService.get('PORT'); // number는 boolean에 할당할 수 없기에, compile error가 발생합니다.
   }
 }
 ```
