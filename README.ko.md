@@ -1,14 +1,14 @@
-# nestjs-typed-config-module (ENG)
+# nestjs-typed-config-module (KOR)
 
-[KOR](./README.ko.md)
+[ENG](./README.md)
 
-`nestjs-typed-config-module` is type-safe nestjs config module & service.
-You can use ConfigService with type-safety, without additional type-casting.
+`nestjs-typed-config-module`은 nestjs 의 config module&service 의 타입 안전성을 강화한 버전입니다.
+ConfigService 를 추가적인 타입 캐스팅 없이 타입 안정성을 보장하는 방식으로 사용 가능합니다.
 
-What you need to do is just define your joi schema with typing, and pass it through module and service.
+joi schema 타이핑을 Module과 Service에 전달하기만 하면 끝입니다.
 
-You can use all options in ConfigModule.forRoot, and you can also use all features in ConfigService.
-This will make your migration from ConfigModule to TypedConfigModule easier.
+ConfigModule.forRoot의 모든 옵션을 사용 가능하며, ConfigService의 모든 기능을 사용 가능합니다.
+이를 통해서 마이그레이션을 더 쉽게 진행할 수 있습니다.
 
 ## example
 
