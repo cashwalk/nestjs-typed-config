@@ -12,6 +12,46 @@ This will make your migration from ConfigModule to TypedConfigModule easier.
 Plus, you can also use ConfigService from `@nestjs/config` without any additional changes.
 TypedConfigModule also provide dependency injection for original ConfigService, so you can migrate your code step by step.
 
+## install
+```bash
+npm install nestjs-typed-config-module
+```
+
+## Defining your custom TypedConfigService
+Use this instead of ConfigService.
+```typescript
+import { BaseTypedConfigService } from 'nestjs-typed-config-module';
+const envObject = {
+  NODE_ENV: Joi.string(),
+  PORT: Joi.number(),
+};
+export const envSchema = Joi.object<typeof envObject>(envObject);
+class TypedConfigService extends BaseTypedConfigService<typeof envSchema> {}
+```
+
+## Using TypedConfigModule
+Use this instead of ConfigModule.
+```typescript
+import { TypedConfigModule } from 'nestjs-typed-config-module';
+
+// first parameter must be typed config service
+// second parameter is just same with first parameter of ConfigModule.forRoot
+TypedConfigModule.forRoot(TypedConfigService, {
+  isGlobal: true,
+  validationSchema: envSchema,
+})
+```
+
+## Resolving Joi schema
+If you just want to use TypedConfigService, you will not need this.
+It transforms joi schema type to plain object type.
+```typescript
+import { ResolveJoiSchema } from 'nestjs-typed-config-module';
+
+// EnvType will be { NODE_ENV: string; PORT: number; }
+type EnvType = ResolveJoiSchema<typeof envSchema>;
+````
+
 ## example
 
 You should set up typed config module&service like below.

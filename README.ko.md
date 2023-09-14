@@ -12,6 +12,46 @@ ConfigModule.forRoot의 모든 옵션을 사용 가능하며, ConfigService의 �
 또한, TypedConfigModule을 쓰더라도, 여전히 `@nestjs/config`의 ConfigService 도 그대로 사용 가능합니다.
 TypedConfigModule도 기존의 ConfigService를 위한 dependency injection를 제공하며, 이를 통해서 천천히 마이그레이션해 나갈 수 있습니다.
 
+## 설치
+```bash
+npm install nestjs-typed-config-module
+```
+
+## TypedConfigService를 정의하기
+ConfigService 대신 사용합니다.
+```typescript
+import { BaseTypedConfigService } from 'nestjs-typed-config-module';
+const envObject = {
+  NODE_ENV: Joi.string(),
+  PORT: Joi.number(),
+};
+export const envSchema = Joi.object<typeof envObject>(envObject);
+class TypedConfigService extends BaseTypedConfigService<typeof envSchema> {}
+```
+
+## TypedConfigModule 사용하기
+ConfigModule 대신 사용합니다.
+```typescript
+import { TypedConfigModule } from 'nestjs-typed-config-module';
+
+// first parameter must be typed config service
+// second parameter is just same with first parameter of ConfigModule.forRoot
+TypedConfigModule.forRoot(TypedConfigService, {
+  isGlobal: true,
+  validationSchema: envSchema,
+})
+```
+
+## Joi schema 해석기
+TypedConfigService만 쓸 것이라면 필요하지 않은 내용입니다.
+Joi 스키마를 plain object 타입으로 변환해줍니다.
+```typescript
+import { ResolveJoiSchema } from 'nestjs-typed-config-module';
+
+// EnvType will be { NODE_ENV: string; PORT: number; }
+type EnvType = ResolveJoiSchema<typeof envSchema>;
+````
+
 ## example
 
 다음과 같이 typed config module&service를 설정합니다.
