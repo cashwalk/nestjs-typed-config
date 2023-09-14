@@ -1,8 +1,8 @@
-# nestjs-typed-config-module (ENG)
+# nestjs-typed-config (ENG)
 
 [KOR](./README.ko.md)
 
-`nestjs-typed-config-module` is type-safe nestjs config module & service.
+`nestjs-typed-config` is type-safe nestjs config module & service.
 You can use ConfigService with type-safety, without additional type-casting.
 
 What you need to do is just define your joi schema with typing, and pass it through module and service.
@@ -14,13 +14,13 @@ TypedConfigModule also provide dependency injection for original ConfigService, 
 
 ## install
 ```bash
-npm install nestjs-typed-config-module
+npm install nestjs-typed-config
 ```
 
 ## Defining your custom TypedConfigService
 Use this instead of ConfigService.
 ```typescript
-import { BaseTypedConfigService } from 'nestjs-typed-config-module';
+import { BaseTypedConfigService } from 'nestjs-typed-config';
 const envObject = {
   NODE_ENV: Joi.string(),
   PORT: Joi.number(),
@@ -32,7 +32,7 @@ class TypedConfigService extends BaseTypedConfigService<typeof envSchema> {}
 ## Using TypedConfigModule
 Use this instead of ConfigModule.
 ```typescript
-import { TypedConfigModule } from 'nestjs-typed-config-module';
+import { TypedConfigModule } from 'nestjs-typed-config';
 
 // first parameter must be typed config service
 // second parameter is just same with first parameter of ConfigModule.forRoot
@@ -46,7 +46,7 @@ TypedConfigModule.forRoot(TypedConfigService, {
 If you just want to use TypedConfigService, you will not need this.
 It transforms joi schema type to plain object type.
 ```typescript
-import { ResolveJoiSchema } from 'nestjs-typed-config-module';
+import { ResolveJoiSchema } from 'nestjs-typed-config';
 
 // EnvType will be { NODE_ENV: string; PORT: number; }
 type EnvType = ResolveJoiSchema<typeof envSchema>;
@@ -57,7 +57,7 @@ type EnvType = ResolveJoiSchema<typeof envSchema>;
 You should set up typed config module&service like below.
 ```typescript
 import { Module } from '@nestjs/common';
-import { BaseTypedConfigService, TypedConfigModule } from 'nestjs-typed-config-module';
+import { BaseTypedConfigService, TypedConfigModule } from 'nestjs-typed-config';
 import Joi from 'joi';
 
 // this is your env object

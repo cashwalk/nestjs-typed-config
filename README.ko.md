@@ -1,8 +1,8 @@
-# nestjs-typed-config-module (KOR)
+# nestjs-typed-config (KOR)
 
 [ENG](./README.md)
 
-`nestjs-typed-config-module`은 nestjs 의 config module&service 의 타입 안전성을 강화한 버전입니다.
+`nestjs-typed-config`은 nestjs 의 config module&service 의 타입 안전성을 강화한 버전입니다.
 ConfigService 를 추가적인 타입 캐스팅 없이 타입 안정성을 보장하는 방식으로 사용 가능합니다.
 
 joi schema 타이핑을 Module과 Service에 전달하기만 하면 끝입니다.
@@ -14,13 +14,13 @@ TypedConfigModule도 기존의 ConfigService를 위한 dependency injection를 �
 
 ## 설치
 ```bash
-npm install nestjs-typed-config-module
+npm install nestjs-typed-config
 ```
 
 ## TypedConfigService를 정의하기
 ConfigService 대신 사용합니다.
 ```typescript
-import { BaseTypedConfigService } from 'nestjs-typed-config-module';
+import { BaseTypedConfigService } from 'nestjs-typed-config';
 const envObject = {
   NODE_ENV: Joi.string(),
   PORT: Joi.number(),
@@ -32,7 +32,7 @@ class TypedConfigService extends BaseTypedConfigService<typeof envSchema> {}
 ## TypedConfigModule 사용하기
 ConfigModule 대신 사용합니다.
 ```typescript
-import { TypedConfigModule } from 'nestjs-typed-config-module';
+import { TypedConfigModule } from 'nestjs-typed-config';
 
 // first parameter must be typed config service
 // second parameter is just same with first parameter of ConfigModule.forRoot
@@ -46,7 +46,7 @@ TypedConfigModule.forRoot(TypedConfigService, {
 TypedConfigService만 쓸 것이라면 필요하지 않은 내용입니다.
 Joi 스키마를 plain object 타입으로 변환해줍니다.
 ```typescript
-import { ResolveJoiSchema } from 'nestjs-typed-config-module';
+import { ResolveJoiSchema } from 'nestjs-typed-config';
 
 // EnvType will be { NODE_ENV: string; PORT: number; }
 type EnvType = ResolveJoiSchema<typeof envSchema>;
@@ -57,7 +57,7 @@ type EnvType = ResolveJoiSchema<typeof envSchema>;
 다음과 같이 typed config module&service를 설정합니다.
 ```typescript
 import { Module } from '@nestjs/common';
-import { BaseTypedConfigService, TypedConfigModule } from 'nestjs-typed-config-module';
+import { BaseTypedConfigService, TypedConfigModule } from 'nestjs-typed-config';
 import Joi from 'joi';
 
 // env object를 정의합니다.
