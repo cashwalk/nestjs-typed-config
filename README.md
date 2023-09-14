@@ -9,6 +9,8 @@ What you need to do is just define your joi schema with typing, and pass it thro
 
 You can use all options in ConfigModule.forRoot, and you can also use all features in ConfigService.
 This will make your migration from ConfigModule to TypedConfigModule easier.
+Plus, you can also use ConfigService from `@nestjs/config` without any additional changes.
+TypedConfigModule also provide dependency injection for original ConfigService, so you can migrate your code step by step.
 
 ## example
 

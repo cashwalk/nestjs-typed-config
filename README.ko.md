@@ -9,6 +9,8 @@ joi schema 타이핑을 Module과 Service에 전달하기만 하면 끝입니다
 
 ConfigModule.forRoot의 모든 옵션을 사용 가능하며, ConfigService의 모든 기능을 사용 가능합니다.
 이를 통해서 마이그레이션을 더 쉽게 진행할 수 있습니다.
+또한, TypedConfigModule을 쓰더라도, 여전히 `@nestjs/config`의 ConfigService 도 그대로 사용 가능합니다.
+TypedConfigModule도 기존의 ConfigService를 위한 dependency injection를 제공하며, 이를 통해서 천천히 마이그레이션해 나갈 수 있습니다.
 
 ## example
 
