@@ -13,7 +13,7 @@ import { ResolveJoiSchema } from './types/resolve-joi-schema';
 
 const TYPED_CONFIG_SERVICE_INJECT_TOKEN = Symbol('TYPED_CONFIG_SERVICE');
 
-export function createTypedConfig<T extends SchemaMap>(schema: T) {
+export const createTypedConfig = <T extends SchemaMap>(schema: T) => {
   const joiSchema = Joi.object<typeof schema>(schema);
 
   type ResolvedSchema = ResolveJoiSchema<typeof schema>;
@@ -62,24 +62,14 @@ export function createTypedConfig<T extends SchemaMap>(schema: T) {
   @Global()
   @Module({
     imports: [ConfigModule],
-    providers: [
-      {
-        provide: TYPED_CONFIG_SERVICE_INJECT_TOKEN,
-        useClass: TypedConfigService,
-      },
-    ],
+    providers: [TypedConfigService],
     exports: [ConfigModule, TYPED_CONFIG_SERVICE_INJECT_TOKEN],
   })
   class TypedConfigHostModule {}
 
   @Module({
     imports: [TypedConfigHostModule, ConfigModule],
-    providers: [
-      {
-        provide: TypedConfigService,
-        useExisting: TYPED_CONFIG_SERVICE_INJECT_TOKEN,
-      },
-    ],
+    providers: [TypedConfigService],
     exports: [TypedConfigHostModule, ConfigModule, TypedConfigService],
   })
   class TypedConfigModule {
@@ -97,16 +87,6 @@ export function createTypedConfig<T extends SchemaMap>(schema: T) {
             validationSchema: joiSchema,
           }),
         ],
-        providers: [
-          {
-            provide: TypedConfigService,
-            useFactory: (typedConfigService: TypedConfigService) => {
-              (typedConfigService as any).isCacheEnabled = !!options.cache;
-              return typedConfigService;
-            },
-            inject: [TYPED_CONFIG_SERVICE_INJECT_TOKEN],
-          },
-        ],
       };
     }
 
@@ -119,4 +99,4 @@ export function createTypedConfig<T extends SchemaMap>(schema: T) {
   }
 
   return { TypedConfigModule, TypedConfigService };
-}
+};
