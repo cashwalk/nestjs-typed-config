@@ -18,9 +18,12 @@ npm install nestjs-typed-config
 ```
 
 ## createTypedConfig
-By calling createTypedConfig, you can create TypedConfigService and TypedConfigModule.
+By calling createTypedConfig, you can create TypedConfigService & TypedConfigModule.
 And then, you change your all ConfigModule to generated TypedConfigModule.
-Also, you can use TypedConfigService instead of ConfigService.
+Now, you can use TypedConfigService instead of ConfigService.
+
+Below code is example of generating TypedConfigService and TypedConfigModule.
+You should write below code in your own project.
 ```typescript
 // typed-config.ts
 import { createTypedConfig } from 'src/my-npm';
@@ -40,8 +43,7 @@ It transforms joi schema type to plain object type.
 ```typescript
 import { ResolveJoiSchema } from 'nestjs-typed-config';
 
-// EnvType will be { NODE_ENV: string; PORT: number; }
-type EnvType = ResolveJoiSchema<typeof envSchema>;
+type EnvType = ResolveJoiSchema<typeof envSchema>; // EnvType will be { NODE_ENV: string; PORT: number; }
 ````
 
 ## example

@@ -17,29 +17,24 @@ TypedConfigModule도 기존의 ConfigService를 위한 dependency injection를 �
 npm install nestjs-typed-config
 ```
 
-## TypedConfigService를 정의하기
-ConfigService 대신 사용합니다.
-```typescript
-import { BaseTypedConfigService } from 'nestjs-typed-config';
-const envObject = {
-  NODE_ENV: Joi.string(),
-  PORT: Joi.number(),
-};
-export const envSchema = Joi.object<typeof envObject>(envObject);
-class TypedConfigService extends BaseTypedConfigService<typeof envSchema> {}
-```
+## createTypedConfig
+createTypedConfig 를 호출해서, TypedConfigService & TypedConfigModule을 생성합니다.
+그러고 나서, ConfigModule 들을 모두 TypedConfigModule으로 교체합니다.
+이제, ConfigService 대신에 TypedConfigService를 사용할 수 있습니다.
 
-## TypedConfigModule 사용하기
-ConfigModule 대신 사용합니다.
+아래 코드는 TypedConfigService & TypedConfigModule을 생성하는 예시입니다.
+프로젝트에 아래 소스코드를 직접 추가해주셔야 합니다.
 ```typescript
-import { TypedConfigModule } from 'nestjs-typed-config';
+// typed-config.ts
+import { createTypedConfig } from 'src/my-npm';
+import * as Joi from 'joi';
 
-// first parameter must be typed config service
-// second parameter is just same with first parameter of ConfigModule.forRoot
-TypedConfigModule.forRoot(TypedConfigService, {
-  isGlobal: true,
-  validationSchema: envSchema,
-})
+export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
+  DB_PASSWORD: Joi.string().required(),
+  DB_PORT: Joi.number().required(),
+});
+
+export type TypedConfigService = InstanceType<typeof TypedConfigService>; // Must declare use this 
 ```
 
 ## Joi schema 해석기
