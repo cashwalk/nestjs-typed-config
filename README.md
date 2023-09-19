@@ -48,33 +48,39 @@ type EnvType = ResolveJoiSchema<typeof envSchema>; // EnvType will be { NODE_ENV
 
 ## example
 
-You should set up typed config module&service like below.
+You should write below code in your own project.
 ```typescript
-import { Module } from '@nestjs/common';
+// src/typed-config.ts
 import { createTypedConfig } from 'src/my-npm';
 import * as Joi from 'joi';
 
 export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
-  PORT: Joi.number().required(),
-  NODE_ENV: Joi.string().required(),
+  DB_PASSWORD: Joi.string().required(),
+  DB_PORT: Joi.number().required(),
 });
 
-export type TypedConfigService = InstanceType<typeof TypedConfigService>; // Must declare use this
+export type TypedConfigService = InstanceType<typeof TypedConfigService>;
+```
 
-// use TypedConfigModule.forRoot instead of ConfigModule.forRoot when you initialize your app
+If you want to use TypedConfig, import TypedConfigModule from `src/typed-config.ts` instead of ConfigModule from `@nestjs/config`.
+```typescript
+// src/app.module.ts
+import { TypedConfigModule } from 'src/typed-config';
+
 @Module({
   imports: [
-    TypedConfigModule.forRoot(TypedConfigService, {
+    TypedConfigModule.forRoot({
       isGlobal: true,
-      validationSchema: envSchema,
     }),
   ],
 })
 export class AppModule {}
 ```
 
-Then you can use TypedConfigService like below.
+Since you used TypedConfigModule, you can use TypedConfigService instead of ConfigService.
+import TypedConfigService from `src/typed-config.ts` instead of ConfigService from `@nestjs/config`.
 ```typescript
+// src/app.service.ts
 @Injectable()
 export class AppService {
   constructor(private readonly configService: TypedConfigService) {} // use TypedConfigService instead of ConfigService
