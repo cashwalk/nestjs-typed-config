@@ -51,7 +51,7 @@ type EnvType = ResolveJoiSchema<typeof envSchema>; // EnvType will be { NODE_ENV
 You should write below code in your own project.
 ```typescript
 // src/typed-config.ts
-import { createTypedConfig } from 'src/my-npm';
+import { createTypedConfig } from 'nestjs-typed-config';
 import * as Joi from 'joi';
 
 export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
@@ -65,7 +65,7 @@ export type TypedConfigService = InstanceType<typeof TypedConfigService>;
 If you want to use TypedConfig, import TypedConfigModule from `src/typed-config.ts` instead of ConfigModule from `@nestjs/config`.
 ```typescript
 // src/app.module.ts
-import { TypedConfigModule } from 'src/typed-config';
+import { TypedConfigModule } from './typed-config';
 
 @Module({
   imports: [
@@ -81,6 +81,8 @@ Since you used TypedConfigModule, you can use TypedConfigService instead of Conf
 import TypedConfigService from `src/typed-config.ts` instead of ConfigService from `@nestjs/config`.
 ```typescript
 // src/app.service.ts
+import { TypedConfigService } from './typed-config';
+
 @Injectable()
 export class AppService {
   constructor(private readonly configService: TypedConfigService) {} // use TypedConfigService instead of ConfigService

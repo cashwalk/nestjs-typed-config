@@ -52,7 +52,7 @@ type EnvType = ResolveJoiSchema<typeof envSchema>;
 프로젝트에 아래와 같은 코드를 작성해 줍니다.
 ```typescript
 // src/typed-config.ts
-import { createTypedConfig } from 'src/my-npm';
+import { createTypedConfig } from 'nestjs-typed-config';
 import * as Joi from 'joi';
 
 export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
