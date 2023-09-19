@@ -1,12 +1,12 @@
-import { DynamicModule, Injectable, Module } from '@nestjs/common';
+import { DynamicModule, Global, Injectable, Module } from '@nestjs/common';
 import {
   ConfigFactory,
   ConfigModule,
   ConfigModuleOptions,
   ConfigService,
+  NoInferType,
   Path,
   PathValue,
-  NoInferType,
 } from '@nestjs/config';
 import Joi, { SchemaMap } from 'joi';
 import { ResolveJoiSchema } from './types/resolve-joi-schema';
@@ -59,6 +59,7 @@ export function createTypedConfig<T extends SchemaMap>(schema: T) {
     }
   }
 
+  @Global()
   @Module({
     imports: [ConfigModule],
     providers: [
@@ -67,7 +68,19 @@ export function createTypedConfig<T extends SchemaMap>(schema: T) {
         useClass: TypedConfigService,
       },
     ],
-    exports: [ConfigModule, TypedConfigService],
+    exports: [ConfigModule, TYPED_CONFIG_SERVICE_INJECT_TOKEN],
+  })
+  class TypedConfigHostModule {}
+
+  @Module({
+    imports: [TypedConfigHostModule, ConfigModule],
+    providers: [
+      {
+        provide: TypedConfigService,
+        useExisting: TYPED_CONFIG_SERVICE_INJECT_TOKEN,
+      },
+    ],
+    exports: [TypedConfigHostModule, ConfigModule, TypedConfigService],
   })
   class TypedConfigModule {
     static forRoot(
