@@ -34,7 +34,7 @@ export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
   DB_PORT: Joi.number().required(),
 });
 
-export type TypedConfigService = InstanceType<typeof TypedConfigService>; // Must declare use this 
+export type TypedConfigService = InstanceType<typeof TypedConfigService>; // 반드시 선언해주세요! 
 ```
 
 ## Joi schema 해석기
@@ -49,7 +49,7 @@ type EnvType = ResolveJoiSchema<typeof envSchema>;
 
 ## example
 
-프로젝트에 아래와 같은 코드를 작성해 줍니다.
+프로젝트에 아래와 같은 코드를 작성해서 TypedConfig을 만들어 줍니다.
 ```typescript
 // src/typed-config.ts
 import { createTypedConfig } from 'nestjs-typed-config';
@@ -60,10 +60,10 @@ export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
   DB_PORT: Joi.number().required(),
 });
 
-export type TypedConfigService = InstanceType<typeof TypedConfigService>;
+export type TypedConfigService = InstanceType<typeof TypedConfigService>; // 반드시 선언해주세요!
 ```
 
-TypedConfig 를 쓰고싶다면, `@nestjs/config`의 ConfigModule 대신에 `src/typed-config.ts`의 TypedConfigModule를 임포트합니다.
+`@nestjs/config`의 ConfigModule 대신에 `src/typed-config.ts`의 TypedConfigModule를 임포트합니다.
 ```typescript
 // src/app.module.ts
 import { TypedConfigModule } from './typed-config';
@@ -78,7 +78,6 @@ import { TypedConfigModule } from './typed-config';
 export class AppModule {}
 ```
 
-TypedConfigModule을 썼기때문에, ConfigService 대신에 TypedConfigService을 쓸 수 있습니다.
 `@nestjs/config`의 ConfigService 대신에 `src/typed-config.ts`의 TypedConfigService를 임포트합니다.
 ```typescript
 // src/app.service.ts

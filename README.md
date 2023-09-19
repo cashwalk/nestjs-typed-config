@@ -34,7 +34,7 @@ export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
   DB_PORT: Joi.number().required(),
 });
 
-export type TypedConfigService = InstanceType<typeof TypedConfigService>; // Must declare use this 
+export type TypedConfigService = InstanceType<typeof TypedConfigService>; // must declare this! 
 ```
 
 ## Resolving Joi schema
@@ -48,21 +48,22 @@ type EnvType = ResolveJoiSchema<typeof envSchema>; // EnvType will be { NODE_ENV
 
 ## example
 
-You should write below code in your own project.
+You should write below code to generate TypedConfig in your own project.
 ```typescript
 // src/typed-config.ts
 import { createTypedConfig } from 'nestjs-typed-config';
 import * as Joi from 'joi';
 
+// parameter should be composed with joi. not wrapped with joi.object()
 export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
   DB_PASSWORD: Joi.string().required(),
   DB_PORT: Joi.number().required(),
 });
 
-export type TypedConfigService = InstanceType<typeof TypedConfigService>;
+export type TypedConfigService = InstanceType<typeof TypedConfigService>; // must declare this!
 ```
 
-If you want to use TypedConfig, import TypedConfigModule from `src/typed-config.ts` instead of ConfigModule from `@nestjs/config`.
+Import TypedConfigModule from `src/typed-config.ts` instead of ConfigModule from `@nestjs/config`.
 ```typescript
 // src/app.module.ts
 import { TypedConfigModule } from './typed-config';
@@ -77,8 +78,7 @@ import { TypedConfigModule } from './typed-config';
 export class AppModule {}
 ```
 
-Since you used TypedConfigModule, you can use TypedConfigService instead of ConfigService.
-import TypedConfigService from `src/typed-config.ts` instead of ConfigService from `@nestjs/config`.
+Import TypedConfigService from `src/typed-config.ts` instead of ConfigService from `@nestjs/config`.
 ```typescript
 // src/app.service.ts
 import { TypedConfigService } from './typed-config';
