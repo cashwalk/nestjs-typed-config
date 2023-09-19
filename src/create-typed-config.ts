@@ -84,7 +84,7 @@ export function createTypedConfig<T extends SchemaMap>(schema: T) {
   })
   class TypedConfigModule {
     static forRoot(
-      options: Omit<ConfigModuleOptions, 'validateSchema'> = {},
+      options: Omit<ConfigModuleOptions, 'validationSchema'> = {},
     ): DynamicModule {
       const { isGlobal, ...other } = options;
 
