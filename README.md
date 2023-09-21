@@ -17,29 +17,24 @@ TypedConfigModule also provide dependency injection for original ConfigService, 
 npm install nestjs-typed-config
 ```
 
-## Defining your custom TypedConfigService
-Use this instead of ConfigService.
-```typescript
-import { BaseTypedConfigService } from 'nestjs-typed-config';
-const envObject = {
-  NODE_ENV: Joi.string(),
-  PORT: Joi.number(),
-};
-export const envSchema = Joi.object<typeof envObject>(envObject);
-class TypedConfigService extends BaseTypedConfigService<typeof envSchema> {}
-```
+## createTypedConfig
+By calling createTypedConfig, you can create TypedConfigService & TypedConfigModule.
+And then, you change your all ConfigModule to generated TypedConfigModule.
+Now, you can use TypedConfigService instead of ConfigService.
 
-## Using TypedConfigModule
-Use this instead of ConfigModule.
+Below code is example of generating TypedConfigService and TypedConfigModule.
+You should write below code in your own project.
 ```typescript
-import { TypedConfigModule } from 'nestjs-typed-config';
+// typed-config.ts
+import { createTypedConfig } from 'src/my-npm';
+import * as Joi from 'joi';
 
-// first parameter must be typed config service
-// second parameter is just same with first parameter of ConfigModule.forRoot
-TypedConfigModule.forRoot(TypedConfigService, {
-  isGlobal: true,
-  validationSchema: envSchema,
-})
+export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
+  DB_PASSWORD: Joi.string().required(),
+  DB_PORT: Joi.number().required(),
+});
+
+export type TypedConfigService = InstanceType<typeof TypedConfigService>; // must declare this! 
 ```
 
 ## Resolving Joi schema
@@ -48,54 +43,55 @@ It transforms joi schema type to plain object type.
 ```typescript
 import { ResolveJoiSchema } from 'nestjs-typed-config';
 
-// EnvType will be { NODE_ENV: string; PORT: number; }
-type EnvType = ResolveJoiSchema<typeof envSchema>;
+type EnvType = ResolveJoiSchema<typeof envSchema>; // EnvType will be { NODE_ENV: string; PORT: number; }
 ````
 
 ## example
 
-You should set up typed config module&service like below.
+You should write below code to generate TypedConfig in your own project.
 ```typescript
-import { Module } from '@nestjs/common';
-import { BaseTypedConfigService, TypedConfigModule } from 'nestjs-typed-config';
-import Joi from 'joi';
+// src/typed-config.ts
+import { createTypedConfig } from 'nestjs-typed-config';
+import * as Joi from 'joi';
 
-// this is your env object
-const envObject = {
-  NODE_ENV: Joi.string(),
-  PORT: Joi.number(),
-};
+// parameter should be composed with joi. not wrapped with joi.object()
+export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
+  DB_PASSWORD: Joi.string().required(),
+  DB_PORT: Joi.number().required(),
+});
 
-// write like below to make BaseTypedConfigService infer type.
-// Joi.object(envObject) will not infered well.
-export const envSchema = Joi.object<typeof envObject>(envObject);
+export type TypedConfigService = InstanceType<typeof TypedConfigService>; // must declare this!
+```
 
-// give envSchema to BaseTypedConfigService
-export class TypedConfigService extends BaseTypedConfigService<typeof envSchema> {}
+Import TypedConfigModule from `src/typed-config.ts` instead of ConfigModule from `@nestjs/config`.
+```typescript
+// src/app.module.ts
+import { TypedConfigModule } from './typed-config';
 
-// use TypedConfigModule.forRoot instead of ConfigModule.forRoot when you initialize your app
 @Module({
   imports: [
-    TypedConfigModule.forRoot(TypedConfigService, {
+    TypedConfigModule.forRoot({
       isGlobal: true,
-      validationSchema: envSchema,
     }),
   ],
 })
 export class AppModule {}
 ```
 
-Then you can use TypedConfigService like below.
+Import TypedConfigService from `src/typed-config.ts` instead of ConfigService from `@nestjs/config`.
 ```typescript
+// src/app.service.ts
+import { TypedConfigService } from './typed-config';
+
 @Injectable()
 export class AppService {
   constructor(private readonly configService: TypedConfigService) {} // use TypedConfigService instead of ConfigService
 
   foo() {
-    const nodeEnv = configService.get('NODE_ENV'); // typed config service will infer type as string, and return value also will be string
-    const port = configService.get('PORT'); // typed config service will infer type as number, and return value also will be number
-    const host = configService.get('HOST'); // compile error, since HOST is not in schema
-    const port2: boolean = configService.get('PORT'); // compile error, since number is not assignable to type boolean
+    const nodeEnv = configService.get('NODE_ENV'); // infer type as string
+    const port = configService.get('PORT'); // infer type as number
+    const host = configService.get('HOST'); // compile error. HOST is not in schema
+    const port2: boolean = configService.get('PORT'); // compile error. number is not assignable to boolean
   }
 }
 ```
