@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { TypedConfigService } from './typed-config';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly configService: TypedConfigService) {}
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    return this.configService.get('HELLO_MESSAGE');
   }
 }
