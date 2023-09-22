@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { ServerInfoModule } from './server-info/server-info.module';
 import { TypedConfigModule } from './typed-config';
 
@@ -10,6 +9,5 @@ import { TypedConfigModule } from './typed-config';
       cache: true,
     }),
   ],
-  controllers: [AppController],
 })
 export class AppModule {}
