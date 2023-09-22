@@ -12,6 +12,8 @@ This will make your migration from ConfigModule to TypedConfigModule easier.
 Plus, you can also use ConfigService from `@nestjs/config` without any additional changes.
 TypedConfigModule also provide dependency injection for original ConfigService, so you can migrate your code step by step.
 
+***You can see detailed usage example in [example code](./example).***
+
 ## install
 ```bash
 npm install nestjs-typed-config
@@ -48,7 +50,7 @@ type EnvType = ResolveJoiSchema<typeof envSchema>; // EnvType will be { NODE_ENV
 
 ## example
 
-For detailed example, see [example](./example) directory.
+For detailed example, see [example code](./example).
 
 You should write below code to generate TypedConfig in your own project.
 ```typescript
