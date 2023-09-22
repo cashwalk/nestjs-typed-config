@@ -1,5 +1,5 @@
 import { createTypedConfig } from 'nestjs-typed-config';
-import Joi from 'joi';
+import * as Joi from 'joi';
 
 export const { TypedConfigModule, TypedConfigService } = createTypedConfig({
   NODE_ENV: Joi.string(),
