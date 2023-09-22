@@ -48,6 +48,8 @@ type EnvType = ResolveJoiSchema<typeof envSchema>; // EnvType will be { NODE_ENV
 
 ## example
 
+For detailed example, see [example](./example) directory.
+
 You should write below code to generate TypedConfig in your own project.
 ```typescript
 // src/typed-config.ts
