@@ -12,6 +12,8 @@ ConfigModule.forRoot의 모든 옵션을 사용 가능하며, ConfigService의 �
 또한, TypedConfigModule을 쓰더라도, 여전히 `@nestjs/config`의 ConfigService 도 그대로 사용 가능합니다.
 TypedConfigModule도 기존의 ConfigService를 위한 dependency injection를 제공하며, 이를 통해서 단계적으로 마이그레이션해 나갈 수 있습니다.
 
+[예제 코드](./example)에서 자세한 사용 예시를 볼 수 있습니다.
+
 ## 설치
 ```bash
 npm install nestjs-typed-config
@@ -48,6 +50,7 @@ type EnvType = ResolveJoiSchema<typeof envSchema>;
 ````
 
 ## example
+더 자세한 예시는 [예제 코드](./example)에서 볼 수 있습니다.
 
 프로젝트에 아래와 같은 코드를 작성해서 TypedConfig을 만들어 줍니다.
 ```typescript
