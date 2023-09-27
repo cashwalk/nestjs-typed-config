@@ -28,7 +28,7 @@ createTypedConfig 를 호출해서, TypedConfigService & TypedConfigModule을 �
 프로젝트에 아래 소스코드를 직접 추가해주셔야 합니다.
 ```typescript
 // typed-config.ts
-import { createTypedConfig } from 'src/my-npm';
+import { createTypedConfig } from 'nestjs-typed-config';
 import * as Joi from 'joi';
 
 export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
@@ -44,6 +44,14 @@ TypedConfigService만 쓸 것이라면 필요하지 않은 내용입니다.
 Joi 스키마를 plain object 타입으로 변환해줍니다.
 ```typescript
 import { ResolveJoiSchema } from 'nestjs-typed-config';
+import * as Joi from 'joi';
+
+const envObject = {
+  NODE_ENV: Joi.string().required(),
+  PORT: Joi.number().required(),
+};
+
+const envSchema = Joi.object<typeof envObject>(envObject);
 
 // EnvType will be { NODE_ENV: string; PORT: number; }
 type EnvType = ResolveJoiSchema<typeof envSchema>;

@@ -28,7 +28,7 @@ Below code is example of generating TypedConfigService and TypedConfigModule.
 You should write below code in your own project.
 ```typescript
 // typed-config.ts
-import { createTypedConfig } from 'src/my-npm';
+import { createTypedConfig } from 'nestjs-typed-config';
 import * as Joi from 'joi';
 
 export const { TypedConfigService, TypedConfigModule } = createTypedConfig({
@@ -44,6 +44,14 @@ If you just want to use TypedConfigService, you will not need this.
 It transforms joi schema type to plain object type.
 ```typescript
 import { ResolveJoiSchema } from 'nestjs-typed-config';
+import * as Joi from 'joi';
+
+const envObject = {
+  NODE_ENV: Joi.string().required(),
+  PORT: Joi.number().required(),
+};
+
+const envSchema = Joi.object<typeof envObject>(envObject);
 
 type EnvType = ResolveJoiSchema<typeof envSchema>; // EnvType will be { NODE_ENV: string; PORT: number; }
 ````
