@@ -4,7 +4,6 @@ import {
   ConfigModule,
   ConfigModuleOptions,
   ConfigService,
-  NoInferType,
   Path,
   PathValue,
 } from '@nestjs/config';
@@ -26,14 +25,14 @@ export const createTypedConfig = <T extends SchemaMap>(schema: T) => {
 
     get<P extends Path<ResolvedSchema> = any>(
       propertyPath: P,
-      defaultValue?: NoInferType<PathValue<ResolvedSchema, P>>,
+      defaultValue?: PathValue<ResolvedSchema, P> | undefined,
     ): PathValue<ResolvedSchema, P>;
 
     get<P extends Path<ResolvedSchema> = any>(
       propertyPath: P,
-      defaultValue?: NoInferType<PathValue<ResolvedSchema, P>>,
+      defaultValue?: PathValue<ResolvedSchema, P> | undefined,
     ): PathValue<ResolvedSchema, P> {
-      if (defaultValue)
+      if (defaultValue !== undefined)
         return this.configService.get(propertyPath, defaultValue);
       return this.configService.get(propertyPath);
     }
@@ -44,14 +43,14 @@ export const createTypedConfig = <T extends SchemaMap>(schema: T) => {
 
     getOrThrow<P extends Path<ResolvedSchema> = any>(
       propertyPath: P,
-      defaultValue?: NoInferType<PathValue<ResolvedSchema, P>>,
+      defaultValue?: PathValue<ResolvedSchema, P> | undefined,
     ): Exclude<PathValue<ResolvedSchema, P>, undefined>;
 
     getOrThrow<P extends Path<ResolvedSchema> = any>(
       propertyPath: P,
-      defaultValue?: NoInferType<PathValue<ResolvedSchema, P>>,
+      defaultValue?: PathValue<ResolvedSchema, P> | undefined,
     ): Exclude<PathValue<ResolvedSchema, P>, undefined> {
-      if (defaultValue)
+      if (defaultValue !== undefined)
         return this.configService.getOrThrow(propertyPath, defaultValue);
       return this.configService.getOrThrow(propertyPath);
     }
