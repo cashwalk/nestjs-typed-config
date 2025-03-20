@@ -4,7 +4,6 @@ import {
   ConfigModule,
   ConfigModuleOptions,
   ConfigService,
-  NoInferType,
   Path,
   PathValue,
 } from '@nestjs/config';
@@ -26,14 +25,14 @@ export const createTypedConfig = <T extends SchemaMap>(schema: T) => {
 
     get<P extends Path<ResolvedSchema> = any>(
       propertyPath: P,
-      defaultValue?: NoInferType<PathValue<ResolvedSchema, P>>,
+      defaultValue?: PathValue<ResolvedSchema, P> | undefined,
     ): PathValue<ResolvedSchema, P>;
 
     get<P extends Path<ResolvedSchema> = any>(
       propertyPath: P,
-      defaultValue?: NoInferType<PathValue<ResolvedSchema, P>>,
+      defaultValue?: PathValue<ResolvedSchema, P> | undefined,
     ): PathValue<ResolvedSchema, P> {
-      if (defaultValue)
+      if (defaultValue !== undefined)
         return this.configService.get(propertyPath, defaultValue);
       return this.configService.get(propertyPath);
     }
@@ -44,14 +43,14 @@ export const createTypedConfig = <T extends SchemaMap>(schema: T) => {
 
     getOrThrow<P extends Path<ResolvedSchema> = any>(
       propertyPath: P,
-      defaultValue?: NoInferType<PathValue<ResolvedSchema, P>>,
+      defaultValue?: PathValue<ResolvedSchema, P> | undefined,
     ): Exclude<PathValue<ResolvedSchema, P>, undefined>;
 
     getOrThrow<P extends Path<ResolvedSchema> = any>(
       propertyPath: P,
-      defaultValue?: NoInferType<PathValue<ResolvedSchema, P>>,
+      defaultValue?: PathValue<ResolvedSchema, P> | undefined,
     ): Exclude<PathValue<ResolvedSchema, P>, undefined> {
-      if (defaultValue)
+      if (defaultValue !== undefined)
         return this.configService.getOrThrow(propertyPath, defaultValue);
       return this.configService.getOrThrow(propertyPath);
     }
@@ -63,17 +62,39 @@ export const createTypedConfig = <T extends SchemaMap>(schema: T) => {
     exports: [ConfigModule, TypedConfigService],
   })
   class TypedConfigModule {
-    static forRoot(
-      options: Omit<ConfigModuleOptions, 'validationSchema'> = {},
-    ): DynamicModule {
-      const { isGlobal, ...other } = options;
+    static async forRoot(
+      options: Omit<ConfigModuleOptions, 'validationSchema'>,
+    ): Promise<DynamicModule> {
+      const loadedConfig = await Promise.all(
+        (options.load || []).map(async (fn) => {
+          const resolvedFn = await Promise.resolve(fn);
+          return resolvedFn();
+        }),
+      );
+
+      const mergedConfig = Object.assign({}, ...loadedConfig, process.env);
+
+      const { error, value: validatedConfig } = joiSchema.validate(
+        mergedConfig,
+        {
+          allowUnknown: true,
+          abortEarly: false,
+        },
+      );
+
+      if (error) {
+        throw new Error(`Configuration validation error: ${error.message}`);
+      }
+
+      Object.assign(process.env, validatedConfig);
 
       return {
         module: TypedConfigModule,
-        global: isGlobal,
+        global: options.isGlobal,
         imports: [
           ConfigModule.forRoot({
-            ...other,
+            ...options,
+            load: [() => validatedConfig],
             validationSchema: joiSchema,
           }),
         ],
